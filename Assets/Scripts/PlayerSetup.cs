@@ -7,11 +7,12 @@ using System;
 public class PlayerSetup : NetworkBehaviour
 {
     public static event Action<Transform> OnPlayerCreated;
+    [SerializeField] private Transform cameraFollowTransform;
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        OnPlayerCreated?.Invoke(transform);
+        OnPlayerCreated?.Invoke(cameraFollowTransform);
     }
 
 }

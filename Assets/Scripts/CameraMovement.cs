@@ -1,68 +1,64 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private Transform target;
-    [SerializeField] private float turnSpeed = 10f;
-    [SerializeField] private float zoomSpeed = 100f;
-    private Vector3 offsetVector = new Vector3(0, 10, -6);
-    float maxZoomDistance = 20f;
-    float minZoomDistance = 2f;
+    [SerializeField] private CinemachineFreeLook freeLookCam;
+    private bool isCamRotating = false;
+    private float zoomLevel = 1f;
+    private CinemachineFreeLook.Orbit[] originalOrbits;
 
-    private bool isRotating = false;
-    public bool IsRotating()
-    {
-        return isRotating; 
-    }
 
+    [SerializeField] private float zoomSpeed;
+    [SerializeField] private float yAxisRotateSpeed;
+    [SerializeField] private float xAxisRotateSpeed;
     private void Start()
     {
-        PlayerSetup.OnPlayerCreated += OnPlayerCreated;
-    }
-
-    private void OnPlayerCreated(Transform _transform)
-    {
-        target = _transform;
-    }
-
-
-
-
-
-    private void LateUpdate()
-    {
-        if (target == null)
+        PlayerSetup.OnPlayerCreated += HandlePlayerCreated;
+        freeLookCam.m_XAxis.m_MaxSpeed = yAxisRotateSpeed;
+        freeLookCam.m_YAxis.m_MaxSpeed = xAxisRotateSpeed;
+        originalOrbits = new CinemachineFreeLook.Orbit[freeLookCam.m_Orbits.Length];
+        for (int i = 0; i < originalOrbits.Length; i++)
         {
-            return;
+            originalOrbits[i].m_Height = freeLookCam.m_Orbits[i].m_Height;
+            originalOrbits[i].m_Radius = freeLookCam.m_Orbits[i].m_Radius;
         }
-
-        transform.position = target.position + offsetVector;
-        if (Input.GetAxis("Mouse ScrollWheel") != 0)
-        {
-            float scroll = Input.GetAxis("Mouse ScrollWheel");
-            float zoomCalculated = scroll * zoomSpeed;
-            if (Vector3.Distance(transform.position, target.position) - zoomCalculated < maxZoomDistance && Vector3.Distance(transform.position, target.position) - zoomCalculated > minZoomDistance)
-            {
-                transform.Translate(transform.forward * zoomCalculated, Space.World);
-                offsetVector = transform.position - target.position;
-            }
-        }
-
-        transform.position = target.position + offsetVector; 
-        transform.LookAt(target);
-
+    }
+    private void HandlePlayerCreated(Transform _target)
+    {
+        freeLookCam.Follow = _target;
+        freeLookCam.LookAt = _target;
+    }
+    private void Update()
+    {
         if (Input.GetMouseButton(1))
         {
-            isRotating = true;
-            offsetVector = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * turnSpeed, Vector3.up) * offsetVector;
-
-            transform.RotateAround(target.position, Vector3.up, 20 * Time.deltaTime);
+            isCamRotating = true;
+            freeLookCam.m_XAxis.m_InputAxisValue = Input.GetAxis("Mouse X");
+            freeLookCam.m_YAxis.m_InputAxisValue = Input.GetAxis("Mouse Y");
         }
         else
         {
-            isRotating = false;
+            freeLookCam.m_XAxis.m_InputAxisValue = 0f;
+            freeLookCam.m_YAxis.m_InputAxisValue = 0f;
+            isCamRotating = false;
         }
+        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        {
+            //zoomLevel -= Input.GetAxis("Mouse ScrollWheel");
+            zoomLevel = Mathf.Lerp(zoomLevel, zoomLevel - Input.GetAxis("Mouse ScrollWheel"), Time.deltaTime * zoomSpeed);
+            zoomLevel = Mathf.Clamp(zoomLevel, 0.5f, 1f);
+            for (int i = 0; i < freeLookCam.m_Orbits.Length; i++)
+            {
+                freeLookCam.m_Orbits[i].m_Height = originalOrbits[i].m_Height * zoomLevel;
+                freeLookCam.m_Orbits[i].m_Radius = originalOrbits[i].m_Radius * zoomLevel;
+            }
+        }
+    }
+    public bool GetIsCamRotating()
+    {
+        return isCamRotating;
     }
 }

@@ -17,7 +17,8 @@ public class PlayerControl : NetworkBehaviour
     private void Start()
     {
         cam = Camera.main;
-        cameraMovement = cam.gameObject.GetComponent<CameraMovement>();
+        //cameraMovement = cam.gameObject.GetComponent<CameraMovement>();
+        cameraMovement = GameObject.FindObjectOfType<CameraMovement>();
     }
 
     private void Update()
@@ -51,7 +52,7 @@ public class PlayerControl : NetworkBehaviour
 
         if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
         {
-            if (!cameraMovement.IsRotating())
+            if (!cameraMovement.GetIsCamRotating())
             {
                 Vector3 playerDirection = hitInfo.point - transform.position;
                 playerDirection = playerDirection.normalized;
