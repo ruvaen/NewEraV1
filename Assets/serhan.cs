@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class alper : MonoBehaviour
+public class serhan : MonoBehaviour
 {
-    float x = 0;
     // Start is called before the first frame update
     void Start()
     {
