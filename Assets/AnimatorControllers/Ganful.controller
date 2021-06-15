@@ -1,6 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
-<<<<<<< Updated upstream
 --- !u!206 &-1128355336117659865
 BlendTree:
   m_ObjectHideFlags: 1
@@ -34,8 +33,6 @@ BlendTree:
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
-=======
->>>>>>> Stashed changes
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -45,21 +42,12 @@ AnimatorController:
   m_Name: Ganful
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: VerticalMoveDirection
+  - m_Name: speed
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-<<<<<<< Updated upstream
-=======
-  - m_Name: HorizontalMoveDirection
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
->>>>>>> Stashed changes
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -109,13 +97,8 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-<<<<<<< Updated upstream
     m_State: {fileID: 6517062923524556845}
     m_Position: {x: 387.4971, y: 66.05234, z: 0}
-=======
-    m_State: {fileID: 3734639354337906073}
-    m_Position: {x: 420, y: 110, z: 0}
->>>>>>> Stashed changes
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
