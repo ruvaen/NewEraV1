@@ -37,12 +37,12 @@ public class CameraMovement : MonoBehaviour
         {
             isCamRotating = true;
             freeLookCam.m_XAxis.m_InputAxisValue = Input.GetAxis("Mouse X");
-            freeLookCam.m_YAxis.m_InputAxisValue = Input.GetAxis("Mouse Y");
+            //freeLookCam.m_YAxis.m_InputAxisValue = Input.GetAxis("Mouse Y");
         }
         else
         {
             freeLookCam.m_XAxis.m_InputAxisValue = 0f;
-            freeLookCam.m_YAxis.m_InputAxisValue = 0f;
+            //freeLookCam.m_YAxis.m_InputAxisValue = 0f;
             isCamRotating = false;
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
