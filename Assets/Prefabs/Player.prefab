@@ -180,8 +180,14 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerController: {fileID: 343149517241131022}
+<<<<<<< Updated upstream
   moveSpeed: 10
   turnSpeed: 50
+=======
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+>>>>>>> Stashed changes
 --- !u!143 &343149517241131022
 CharacterController:
   m_ObjectHideFlags: 0
@@ -779,7 +785,7 @@ GameObject:
   - component: {fileID: 1648937125578793151}
   - component: {fileID: 8574535270259605466}
   m_Layer: 0
-  m_Name: PlayerGraphic
+  m_Name: PlayerGraphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
