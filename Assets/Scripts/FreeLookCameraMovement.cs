@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour
+public class FreeLookCameraMovement : MonoBehaviour
 {
     private Transform target;
     [SerializeField] private float turnSpeed = 10f;
@@ -33,9 +33,23 @@ public class CameraMovement : MonoBehaviour
 
     private void LateUpdate()
     {
+<<<<<<< Updated upstream:Assets/Scripts/CameraMovement.cs
         if (target == null)
         {
             return;
+=======
+        if (Input.GetMouseButton(1))
+        {
+            isCamRotating = true;
+            freeLookCam.m_XAxis.m_InputAxisValue = Input.GetAxis("Mouse X");
+            //freeLookCam.m_YAxis.m_InputAxisValue = Input.GetAxis("Mouse Y");
+        }
+        else
+        {
+            freeLookCam.m_XAxis.m_InputAxisValue = 0f;
+            //freeLookCam.m_YAxis.m_InputAxisValue = 0f;
+            isCamRotating = false;
+>>>>>>> Stashed changes:Assets/Scripts/FreeLookCameraMovement.cs
         }
 
         transform.position = target.position + offsetVector;
