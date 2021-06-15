@@ -182,7 +182,7 @@ MonoBehaviour:
   syncInterval: 0.1
   playerController: {fileID: 343149517241131022}
   moveSpeed: 10
-  turnSpeed: 50
+  turnSpeed: 10
 --- !u!143 &343149517241131022
 CharacterController:
   m_ObjectHideFlags: 0

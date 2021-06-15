@@ -11,13 +11,11 @@ public class PlayerControl : NetworkBehaviour
     
     private CameraMovement cameraMovement;
     private Camera cam;
-
-
+    private bool isTurning = false;
 
     private void Start()
     {
         cam = Camera.main;
-        //cameraMovement = cam.gameObject.GetComponent<CameraMovement>();
         cameraMovement = GameObject.FindObjectOfType<CameraMovement>();
     }
 
@@ -26,23 +24,58 @@ public class PlayerControl : NetworkBehaviour
         if (isLocalPlayer)
         {
             PerformMovement();
-            PerformRotation();
+            //PerformRotation();
         }
-
-
     }
 
-    private void PlayerShoot()
-    {
-
-    }
     private void PerformMovement()
     {
         float _xAxis = Input.GetAxisRaw("Horizontal");
         float _zAxis = Input.GetAxisRaw("Vertical");
+        if (_xAxis != 0 || _zAxis != 0)
+        {
+            Vector3 _moveVerticalVector = cam.transform.forward;
+            _moveVerticalVector.y = 0;
+            _moveVerticalVector = _zAxis * _moveVerticalVector;
+            Vector3 _moveHorizontalVector = cam.transform.right;
+            _moveHorizontalVector.y = 0;
+            _moveHorizontalVector = _xAxis * _moveHorizontalVector;
+            Vector3 _moveVector = (_moveHorizontalVector + _moveVerticalVector).normalized;
+            Debug.Log(Vector3.Dot(transform.forward, _moveVector));
+            if (Vector3.Dot(transform.forward, _moveVector)> 0.9999)
+            {
+                isTurning = false;
+            }
+            else
+            {
+                isTurning = true;
+                transform.forward = Vector3.Lerp(transform.forward, _moveVector, Time.deltaTime * turnSpeed);
+            }
 
-        Vector3 _movement = (transform.forward * _zAxis) + (transform.right * _xAxis);
-        playerController.Move(_movement.normalized * moveSpeed * Time.deltaTime);
+            if (!isTurning)
+            {
+                playerController.Move(transform.forward * moveSpeed * Time.deltaTime);
+            }
+        }
+       
+
+
+        //if (Vector3.Dot(transform.forward,_moveVerticalVector)!=1)
+        //{
+        //Debug.Log("selam");
+        //isTurning = true;
+        //transform.forward = _moveVerticalVector;
+        //}
+        //else
+        //{
+        //isTurning = false;
+        //}
+        //if (!isTurning)
+        //{
+       
+        
+            
+        //}
     }
 
     private void PerformRotation()
