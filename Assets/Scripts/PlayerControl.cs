@@ -6,17 +6,11 @@ using Mirror;
 public class PlayerControl : NetworkBehaviour
 {
     [SerializeField] private CharacterController playerController;
-<<<<<<< Updated upstream
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float turnSpeed = 20f;
-=======
-    [SerializeField] private LayerMask groundLayer;
-    private float moveSpeed = 4f;
-    private float turnSpeed = 10f;
->>>>>>> Stashed changes
     
+    private CameraMovement cameraMovement;
     private Camera cam;
-<<<<<<< Updated upstream
 
 
 
@@ -24,14 +18,6 @@ public class PlayerControl : NetworkBehaviour
     {
         cam = Camera.main;
         cameraMovement = cam.gameObject.GetComponent<CameraMovement>();
-=======
-   
-    private bool isMoving = false;
-    private Vector3 movementDirection;
-    private void Start()
-    {
-        cam = Camera.main;
->>>>>>> Stashed changes
     }
 
     private void Update()
@@ -40,7 +26,6 @@ public class PlayerControl : NetworkBehaviour
         {
             PerformMovement();
             PerformRotation();
-<<<<<<< Updated upstream
         }
 
 
@@ -50,85 +35,29 @@ public class PlayerControl : NetworkBehaviour
     {
 
     }
-=======
-            //PerformMovement2();
-        }
-    }
-    /*private void PerformMovement2()
-    {
-        float _horizontalAxis = Input.GetAxisRaw("Horizontal");
-        float _verticalAxis = Input.GetAxisRaw("Vertical");
-
-        Vector3 direction = new Vector3(_horizontalAxis, 0f, _verticalAxis).normalized;
-        anim.SetFloat("running", direction.magnitude);
-        if (direction.magnitude >= 0.1)
-        {
-            
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-            //float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            //cam.transform.forward = transform.forward;
-
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSpeed);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-
-
-            playerController.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
-        }
-    }*/
->>>>>>> Stashed changes
     private void PerformMovement()
     {
         float _xAxis = Input.GetAxisRaw("Horizontal");
         float _zAxis = Input.GetAxisRaw("Vertical");
-<<<<<<< Updated upstream
 
         Vector3 _movement = (transform.forward * _zAxis) + (transform.right * _xAxis);
         playerController.Move(_movement.normalized * moveSpeed * Time.deltaTime);
-=======
-        Vector3 _verticalDirectionVector = cam.transform.forward * _zAxis;
-        _verticalDirectionVector.y = 0;
-        Vector3 _horizontalDirectionVector = cam.transform.right * _xAxis;
-        _horizontalDirectionVector.y = 0;
-        movementDirection = (_verticalDirectionVector + _horizontalDirectionVector).normalized;
-        if (movementDirection.magnitude > 0)
-        {
-            isMoving = true;
-            playerController.Move(movementDirection * moveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            isMoving = false;
-        }
-        
->>>>>>> Stashed changes
     }
+
     private void PerformRotation()
     {
-        Quaternion _targetRotation = transform.rotation;
-        if (isMoving && !Input.GetMouseButton(0))
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
         {
-            _targetRotation = Quaternion.LookRotation(movementDirection, transform.up);
-        }
-        else if(Input.GetMouseButton(0))
-        {
-<<<<<<< Updated upstream
             if (!cameraMovement.IsRotating())
-=======
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, groundLayer))
->>>>>>> Stashed changes
             {
-                Vector3 _mouseDirection = (hitInfo.point - transform.position).normalized;
-                _mouseDirection.y = 0;
-                _targetRotation = Quaternion.LookRotation(_mouseDirection, transform.up);
+                Vector3 playerDirection = hitInfo.point - transform.position;
+                playerDirection = playerDirection.normalized;
+                playerDirection.y = 0;
+                transform.forward = Vector3.Lerp(transform.forward, transform.forward + playerDirection, Time.deltaTime * turnSpeed);
             }
-        }
-        if (_targetRotation != transform.rotation)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * turnSpeed);
         }
     }
 }
