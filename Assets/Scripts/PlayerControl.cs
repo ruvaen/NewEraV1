@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
+public enum MovementState { Idle, Walking, Running}
 public class PlayerControl : NetworkBehaviour
 {
     [SerializeField] private CharacterController playerController;
+    [SerializeField] private PlayerAnimation animationHandler;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float turnSpeed = 10f;
     
     private Camera cam;
     private Vector3 movementDirection;
-    private bool isMoving = false;
+    private MovementState movementState;
     private void Start()
     {
         cam = Camera.main;
@@ -24,6 +26,9 @@ public class PlayerControl : NetworkBehaviour
         {
             PerformMovement();
             PerformRotation();
+            float _lookToForwardAngle = Vector3.SignedAngle(transform.forward, movementDirection, transform.up);
+            animationHandler.HandleMovement(movementState, _lookToForwardAngle, movementDirection);
+            Debug.Log(Vector3.Dot(transform.forward.normalized,movementDirection.normalized)+"     "+ Vector3.Dot(transform.right.normalized, movementDirection.normalized));
             //PerformMovement2();
         }
     }
@@ -63,35 +68,42 @@ public class PlayerControl : NetworkBehaviour
         movementDirection = (_verticalDirectionVector + _horizontalDirectionVector).normalized;
         if (movementDirection.magnitude > 0)
         {
-            isMoving = true;
+            movementState = MovementState.Running;
             playerController.Move(movementDirection * moveSpeed * Time.deltaTime);
         }
         else
         {
-            isMoving = false;
+            movementState = MovementState.Idle;
         }
+        
     }
     private void PerformRotation()
     {
         Quaternion _targetRotation = transform.rotation;
-        if (isMoving && !Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
-            _targetRotation = Quaternion.LookRotation(movementDirection, transform.up);
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, groundLayer))
+            if(movementDirection.magnitude > 0)
             {
-                Vector3 _mouseDirection = (hitInfo.point - transform.position).normalized;
+                movementState = MovementState.Walking;
+            }
+            Ray _ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit _hitInfo;
+            if (Physics.Raycast(_ray, out _hitInfo, Mathf.Infinity, groundLayer))
+            {
+                Vector3 _mouseDirection = (_hitInfo.point - transform.position).normalized;
                 _mouseDirection.y = 0;
                 _targetRotation = Quaternion.LookRotation(_mouseDirection, transform.up);
             }
         }
+        else if(!Input.GetMouseButton(0) && movementDirection.magnitude > 0)
+        {
+            _targetRotation = Quaternion.LookRotation(movementDirection, transform.up);
+        }
+
         if (_targetRotation != transform.rotation)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, _targetRotation, Time.deltaTime * turnSpeed);
         }
     }
+    
 }

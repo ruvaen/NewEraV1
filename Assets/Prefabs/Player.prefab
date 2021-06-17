@@ -136,10 +136,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 343149517241131020}
+  - component: {fileID: -1973557240139736307}
   - component: {fileID: 343149517241131023}
+  - component: {fileID: 251009973627803882}
   - component: {fileID: 343149517241131022}
   - component: {fileID: 2839470475644242786}
-  - component: {fileID: 251009973627803882}
   - component: {fileID: 3886706184409640628}
   - component: {fileID: 6199284195502177911}
   m_Layer: 0
@@ -166,6 +167,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-1973557240139736307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343149517241131017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e941a251a6879ab4faf1d6e643469044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 8574535270259605466}
 --- !u!114 &343149517241131023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,11 +195,27 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerController: {fileID: 343149517241131022}
+  animationHandler: {fileID: -1973557240139736307}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   moveSpeed: 4
   turnSpeed: 10
+--- !u!114 &251009973627803882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343149517241131017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a596c1c196933244d9c0da723aff1e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  cameraFollowTransform: {fileID: 7486756947605731011}
 --- !u!143 &343149517241131022
 CharacterController:
   m_ObjectHideFlags: 0
@@ -221,21 +251,6 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &251009973627803882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343149517241131017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a596c1c196933244d9c0da723aff1e49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  cameraFollowTransform: {fileID: 7486756947605731011}
 --- !u!114 &3886706184409640628
 MonoBehaviour:
   m_ObjectHideFlags: 0
