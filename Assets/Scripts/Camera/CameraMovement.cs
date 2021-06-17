@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
@@ -16,7 +14,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float xAxisRotateSpeed;
     private void Start()
     {
-        PlayerSetup.OnPlayerCreated += HandlePlayerCreated;
+        PlayerSetup.OnLocalPlayerCreated += HandlePlayerCreated;
         freeLookCam.m_XAxis.m_MaxSpeed = yAxisRotateSpeed;
         freeLookCam.m_YAxis.m_MaxSpeed = xAxisRotateSpeed;
         originalOrbits = new CinemachineFreeLook.Orbit[freeLookCam.m_Orbits.Length];
@@ -47,7 +45,6 @@ public class CameraMovement : MonoBehaviour
         }
         if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {
-            //zoomLevel -= Input.GetAxis("Mouse ScrollWheel");
             zoomLevel = Mathf.Lerp(zoomLevel, zoomLevel - Input.GetAxis("Mouse ScrollWheel"), Time.deltaTime * zoomSpeed);
             zoomLevel = Mathf.Clamp(zoomLevel, 0.5f, 1f);
             for (int i = 0; i < freeLookCam.m_Orbits.Length; i++)
