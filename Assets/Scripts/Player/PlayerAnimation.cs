@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+
     [SerializeField] private Animator playerAnimator;
-   public void HandleMovement(MovementState _movementState, float _lookToForwardAngle, Vector3 _movementDirection)
+    /*
+    public void HandleMovement(MovementState _movementState, float _lookToForwardAngle, Vector3 _movementDirection)
     {
         switch (_movementState)
         {
@@ -24,4 +24,11 @@ public class PlayerAnimation : MonoBehaviour
                 break;
         }
     }
+    */
+    public void HandleMovement(Transform _playerTransform, Vector3 _moveDirection, MovementState _movementState)
+    {
+        playerAnimator.SetFloat("MoveHorizontal", Vector3.Dot(_playerTransform.right.normalized, _moveDirection), 0.1f, Time.deltaTime);
+        playerAnimator.SetFloat("MoveVertical", (_movementState == MovementState.Running) ? 2f : Vector3.Dot(_playerTransform.forward.normalized, _moveDirection), 0.1f, Time.deltaTime);
+    }
+       
 }
