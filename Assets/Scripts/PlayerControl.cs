@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using Mirror;
 
 public enum MovementState { Idle, Walking, Running}
@@ -7,14 +9,12 @@ public class PlayerControl : NetworkBehaviour
     [SerializeField] private CharacterController playerController;
     [SerializeField] private PlayerAnimation animationHandler;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float walkSpeed = 4f;
-    [SerializeField] private float runSpeed = 7f;
+    [SerializeField] private float moveSpeed = 4f;
     [SerializeField] private float turnSpeed = 10f;
     
     private Camera cam;
     private Vector3 movementDirection;
     private MovementState movementState;
-    private bool isLeftMouseButtonHeldDown = false;
     private void Start()
     {
         cam = Camera.main;
@@ -24,12 +24,39 @@ public class PlayerControl : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            isLeftMouseButtonHeldDown = Input.GetMouseButton(0);
             PerformMovement();
             PerformRotation();
-            animationHandler.HandleMovement(transform, movementDirection, movementState);
+            float _lookToForwardAngle = Vector3.SignedAngle(transform.forward, movementDirection, transform.up);
+            animationHandler.HandleMovement(movementState, _lookToForwardAngle, movementDirection);
+            Debug.Log(Vector3.Dot(transform.forward.normalized,movementDirection.normalized)+"     "+ Vector3.Dot(transform.right.normalized, movementDirection.normalized));
+            //PerformMovement2();
         }
     }
+    /*
+    private void PerformMovement2()
+    {
+        float _horizontalAxis = Input.GetAxisRaw("Horizontal");
+        float _verticalAxis = Input.GetAxisRaw("Vertical");
+
+        Vector3 direction = new Vector3(_horizontalAxis, 0f, _verticalAxis).normalized;
+        Debug.Log(direction.magnitude);
+        anim.SetFloat("running", direction.magnitude);
+        if (direction.magnitude >= 0.1)
+        {
+            
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+            //float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            cam.transform.forward = transform.forward;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSpeed);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+
+            playerController.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
+        }
+    }
+    */
     private void PerformMovement()
     {
         float _xAxis = Input.GetAxisRaw("Horizontal");
@@ -42,8 +69,7 @@ public class PlayerControl : NetworkBehaviour
         if (movementDirection.magnitude > 0)
         {
             movementState = MovementState.Running;
-            float _speed = (isLeftMouseButtonHeldDown) ? walkSpeed : runSpeed;
-            playerController.Move(movementDirection * _speed * Time.deltaTime);
+            playerController.Move(movementDirection * moveSpeed * Time.deltaTime);
         }
         else
         {
@@ -54,7 +80,7 @@ public class PlayerControl : NetworkBehaviour
     private void PerformRotation()
     {
         Quaternion _targetRotation = transform.rotation;
-        if (isLeftMouseButtonHeldDown)
+        if (Input.GetMouseButton(0))
         {
             if(movementDirection.magnitude > 0)
             {
@@ -69,7 +95,7 @@ public class PlayerControl : NetworkBehaviour
                 _targetRotation = Quaternion.LookRotation(_mouseDirection, transform.up);
             }
         }
-        else if(!isLeftMouseButtonHeldDown && movementDirection.magnitude > 0)
+        else if(!Input.GetMouseButton(0) && movementDirection.magnitude > 0)
         {
             _targetRotation = Quaternion.LookRotation(movementDirection, transform.up);
         }
